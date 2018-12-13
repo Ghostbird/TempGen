@@ -19,13 +19,13 @@ def operate(template_path, data_path, output_path):
         output_path: The output path (must exist)
     """
     # Load the template lines
-    with open(template_path,'r') as template_file:
+    with open(template_path,'r', encoding='utf-8') as template_file:
         template = [line for line in template_file]
 
     # The path extension will be appended to new created files 
     _, extension = os.path.splitext(template_path)
 
-    with open(data_path, 'r') as data_file:
+    with open(data_path, 'r', encoding='utf-8') as data_file:
         # The header is the first line of the CSV, minus the terminating newline, split on semicolons.
         placeholders = data_file.readline()[:-1].split(';')
 
@@ -35,7 +35,7 @@ def operate(template_path, data_path, output_path):
             replacements = dict(zip(placeholders, line[:-1].split(';')))
 
             # Write the new file, use the output path, the $file_name replacement value from this CSV line and extension from the template
-            with open(os.path.join(output_path,replacements['$file_name'] + extension),'w') as f_out:
+            with open(os.path.join(output_path,replacements['$file_name'] + extension),'w', encoding='utf-8') as f_out:
                 f_out.writelines([
                     # Feed the line to a reducer that goes over the replacements and replaces all occurrences of the placeholder with the value.
                     reduce(lambda x, y: x.replace(y[0],y[1]), replacements.items(), line)
